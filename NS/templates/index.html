@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Encryption and Decryption</title>
+    <style>
+        body {
+            background-color: #121212;
+            background-image: url('https://pixabay.com/get/g114b6a4ba1cedd40ac124adbf5580f05166a7bcba353631d936f67f98f51aef994d76fb6a089b52c96a8e86874ae05649be40c0fe0fe07e550136109d513803bf23748f3f0bef5563fea4a19719965c8_1280.jpg?attachment='); 
+            background-size: cover;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #bb86fc;
+        }
+
+        .upload-section, .decrypt-section, .card {
+            background-color: #1f1f1f;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input[type="file"] {
+            color: #ffffff;
+            background-color: #333;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #bb86fc;
+            color: #121212;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #985eff;
+        }
+
+        .download-btn {
+            margin-right: 10px;
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Image Encryption and Decryption</h1>
+
+        <div class="upload-section">
+            <h2>Upload Image</h2>
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="file" name="image" required>
+                    <button type="submit">Upload</button>
+                </div>
+            </form>
+        </div>
+
+        {% if image_path %}
+        <div class="card">
+            <h2>Uploaded Image</h2>
+            <img src="{{ image_path }}" alt="Uploaded Image">
+            <form action="/encrypt" method="POST">
+                <input type="hidden" name="image_path" value="{{ image_path }}">
+                <button type="submit" class="encrypt-btn">Encrypt</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if encrypted_image_path %}
+        <div class="card">
+            <h2>Encrypted Image</h2>
+            <img src="{{ encrypted_image_path }}" alt="Encrypted Image">
+            <div class="button-group">
+                <a href="/download_key/{{ 'key.txt' }}">
+                    <button class="download-btn">Download Key</button>
+                </a>
+                <a href="{{ encrypted_image_path }}" download="encrypted_image.png">
+                    <button class="download-btn">Download Encrypted PNG</button>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="decrypt-section">
+            <h2>Decrypt an Encrypted Image</h2>
+            <form action="/decrypt" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="image">Upload Encrypted Image:</label>
+                    <input type="file" name="image" required>
+                </div>
+                <div class="form-group">
+                    <label for="key">Upload Encryption Key:</label>
+                    <input type="file" name="key" required>
+                </div>
+                <button type="submit" class="decrypt-btn">Decrypt</button>
+            </form>
+        </div>
+
+        {% if decrypted_image_path %}
+        <div class="card">
+            <h2>Decrypted Image</h2>
+            <img src="{{ decrypted_image_path }}" alt="Decrypted Image">
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
